@@ -1,0 +1,18 @@
+# Initialiser SparkSession
+#spark = SparkSession.builder.getOrCreate()
+
+# Definer ABFS Path til Lakehouse
+abfs_path = "abfss://e26bbb09-4bf1-4e0a-9396-180457e77131@onelake.dfs.fabric.microsoft.com/67fcf267-0cab-44a0-9f9e-b959ad67ea24/Files/adventureworks/2025/10/16"
+
+# List alle filer i den angivne sti
+files = mssparkutils.fs.ls(abfs_path)
+
+print(files)
+
+# Loop gennem filerne og slet dem, der har whitespace mellem . og parquet
+
+for file in files:
+    if file.name.endswith('. parquet'):
+        file_path = os.path.join(abfs_path, file.name)
+        mssparkutils.fs.rm(file_path, recurse=True)
+        print(f"Slettet fil: {file_path}")
